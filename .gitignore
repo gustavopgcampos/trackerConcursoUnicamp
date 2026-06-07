@@ -1,0 +1,24 @@
+# Credenciais e configurações sensíveis
+.env
+
+# Estado persistido pelo monitor (contém o último conteúdo capturado)
+state.json
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.Python
+pip-log.txt
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
