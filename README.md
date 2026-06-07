@@ -195,7 +195,7 @@ O arquivo de workflow está em:
 .github/workflows/monitor.yml
 ```
 
-Por padrão, ele roda a cada hora e também permite execução manual pela aba **Actions** do GitHub.
+Por padrão, ele roda duas vezes por dia, às 09:00 e 15:00 no horário de São Paulo, e também permite execução manual pela aba **Actions** do GitHub.
 
 #### 1. Suba o projeto para um repositório no GitHub
 
@@ -238,7 +238,7 @@ Para testar o monitor normal, escolha o modo `monitor`. Na primeira execução, 
 
 Para testar o envio de e-mail, escolha o modo `test-email`. Esse modo envia um e-mail de teste usando as configurações cadastradas nos Secrets.
 
-> Observação: o GitHub Actions usa horários em UTC. O agendamento `0 * * * *` significa "todo começo de hora" em UTC.
+> Observação: o GitHub Actions usa horários em UTC. O agendamento `0 12,18 * * *` equivale a 09:00 e 15:00 no horário de São Paulo.
 
 ---
 

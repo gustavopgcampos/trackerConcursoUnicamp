@@ -12,8 +12,9 @@ on:
           - monitor
           - test-email
   schedule:
-    # Executa a cada hora. Os horários do GitHub Actions usam UTC.
-    - cron: "0 * * * *"
+    # Executa todos os dias às 09:00 e 15:00 no horário de São Paulo.
+    # Os horários do GitHub Actions usam UTC.
+    - cron: "0 12,18 * * *"
 
 jobs:
   monitor:
