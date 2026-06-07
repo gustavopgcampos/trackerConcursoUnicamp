@@ -9,6 +9,9 @@ on:
 jobs:
   monitor:
     runs-on: ubuntu-latest
+    env:
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: "587"
 
     steps:
       - name: Baixar código
@@ -36,13 +39,11 @@ jobs:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
         run: python monitor.py --run-once
 
       - name: Salvar estado atualizado
         uses: actions/cache/save@v4
-        if: always()
+        if: always() && hashFiles('state.json') != ''
         with:
           path: state.json
           key: monitor-state-${{ github.run_id }}
