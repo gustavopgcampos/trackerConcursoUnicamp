@@ -153,8 +153,28 @@ def send_notification(old_content: str, new_content: str, subject_prefix: str = 
         return
 
     recipients = [e.strip() for e in EMAIL_TO.split(",") if e.strip()]
+    if not recipients:
+        raise ValueError("EMAIL_TO não contém nenhum destinatário válido.")
+
     now_str = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
     subject = f"{subject_prefix}🔔 Atualização nos Concursos Públicos da UNICAMP"
+    log.info("Preparando e-mail via %s:%s", SMTP_HOST, SMTP_PORT)
+    log.info("Remetente configurado: %s", EMAIL_FROM)
+    log.info("Destinatários configurados: %s", ", ".join(recipients))
+
+    text_body = f"""Atualização detectada — Concursos Públicos UNICAMP
+
+Página monitorada:
+{URL}
+
+Conteúdo atual:
+{new_content}
+
+Conteúdo anterior:
+{old_content or "(sem estado anterior registrado)"}
+
+Verificação realizada em {now_str}
+"""
 
     html_body = f"""
 <!DOCTYPE html>
@@ -182,6 +202,7 @@ def send_notification(old_content: str, new_content: str, subject_prefix: str = 
     msg["Subject"] = subject
     msg["From"]    = EMAIL_FROM
     msg["To"]      = ", ".join(recipients)
+    msg.attach(MIMEText(text_body, "plain", "utf-8"))
     msg.attach(MIMEText(html_body, "html", "utf-8"))
 
     try:
