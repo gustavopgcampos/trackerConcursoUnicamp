@@ -2,6 +2,15 @@ name: Monitor UNICAMP
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Tipo de execução"
+        required: true
+        default: "monitor"
+        type: choice
+        options:
+          - monitor
+          - test-email
   schedule:
     # Executa a cada hora. Os horários do GitHub Actions usam UTC.
     - cron: "0 * * * *"
@@ -35,11 +44,20 @@ jobs:
             monitor-state-
 
       - name: Executar monitor
+        if: github.event_name != 'workflow_dispatch' || inputs.mode == 'monitor'
         env:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python monitor.py --run-once
+
+      - name: Enviar e-mail de teste
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test-email'
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python monitor.py --test-email
 
       - name: Salvar estado atualizado
         uses: actions/cache/save@v4
