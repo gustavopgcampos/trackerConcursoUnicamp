@@ -136,21 +136,18 @@ def save_state(state: dict) -> None:
 
 # ── Notificação por e-mail ────────────────────────────────────────────────────
 
-def _validate_email_config() -> bool:
+def _validate_email_config() -> None:
     missing = [v for v in ("EMAIL_FROM", "EMAIL_PASSWORD", "EMAIL_TO") if not os.getenv(v)]
     if missing:
-        log.error(
-            "Variáveis de e-mail não configuradas: %s. Verifique o arquivo .env",
-            ", ".join(missing),
+        raise RuntimeError(
+            f"Variáveis de e-mail não configuradas: {', '.join(missing)}. "
+            "Verifique o arquivo .env ou os Secrets do GitHub Actions."
         )
-        return False
-    return True
 
 
 def send_notification(old_content: str, new_content: str, subject_prefix: str = "") -> None:
     """Envia e-mail de notificação comparando conteúdo anterior e atual."""
-    if not _validate_email_config():
-        return
+    _validate_email_config()
 
     recipients = [e.strip() for e in EMAIL_TO.split(",") if e.strip()]
     if not recipients:
