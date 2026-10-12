@@ -10,6 +10,7 @@ Uso:
   python monitor.py --test-email  # testa as configurações de e-mail
 """
 
+
 import os
 import re
 import sys
